@@ -62,7 +62,10 @@ endif
 
 build-%:
 	mkdir -p bin
-	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-X main.version=$(REV) -extldflags "-static"' -o ./bin/$* ./cmd/$*
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags '-X main.version=$(REV) -extldflags "-static"' -o ./bin/$*/linux/amd64 ./cmd/$*
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -a -ldflags '-X main.version=$(REV) -extldflags "-static"' -o ./bin/$*/linux/arm64 ./cmd/$*
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -a -ldflags '-X main.version=$(REV) -extldflags "-static"' -o ./bin/$*/linux/arm/v7 ./cmd/$*
+	cp ./bin/$*/linux/arm/v7 ./bin/$*/linux/arm/v6
 	CGO_ENABLED=0 GOOS=windows go build -a -ldflags '-X main.version=$(REV) -extldflags "-static"' -o ./bin/$*.exe ./cmd/$*
 
 container-%: build-%
